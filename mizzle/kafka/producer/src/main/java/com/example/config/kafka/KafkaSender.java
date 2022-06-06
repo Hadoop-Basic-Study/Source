@@ -9,6 +9,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import com.example.payload.request.SampleRequest;
 
@@ -18,9 +19,6 @@ public class KafkaSender {
     
     @Autowired
     private KafkaTemplate<String, SampleRequest> kafkaTemplate;
-
-    @Autowired
-    private CustomListenableFutureCallback customListenableFutureCallback;
 
     @Value("${custom.kafka.topic}")
     private String topic;
@@ -32,7 +30,19 @@ public class KafkaSender {
         
         ListenableFuture<SendResult<String,SampleRequest>> listenableFuture = kafkaTemplate.send(message);
 
-        listenableFuture.addCallback(customListenableFutureCallback);
+        listenableFuture.addCallback(new ListenableFutureCallback<SendResult<String, SampleRequest>>() {
+
+            @Override
+            public void onSuccess(SendResult<String, SampleRequest> stringObjectSendResult) {
+                System.out.println("Sent message=[" + stringObjectSendResult.getProducerRecord().value().toString() +
+                        "] with offset=[" + stringObjectSendResult.getRecordMetadata().offset() + "]");
+            }
+
+            @Override
+            public void onFailure(Throwable ex) {
+                System.out.println("Unable to send message=[] due to : " + ex.getMessage());
+            }
+        });
     }
 
 }

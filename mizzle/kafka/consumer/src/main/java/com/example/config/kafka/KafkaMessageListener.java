@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 import com.example.payload.request.SampleRequest;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class KafkaMessageListener {
 
@@ -20,6 +23,6 @@ public class KafkaMessageListener {
         @Payload SampleRequest sampleRequest,
         @Headers MessageHeaders messageHeader
     ){
-
+        log.info("listenWithHeader sampleRequest = {}", sampleRequest.toString());
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
+@PropertySource(value = { "classpath:swagger/springdoc.properties" })
 @PropertySource(value = { "classpath:kafka/kafka.properties" })
 public class ExampleApplication {
 
