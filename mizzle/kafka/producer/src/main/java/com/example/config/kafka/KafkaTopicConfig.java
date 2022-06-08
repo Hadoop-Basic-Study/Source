@@ -13,7 +13,7 @@ import java.util.Map;
 @Configuration
 public class KafkaTopicConfig {
 
-    @Value("${custom.kafka.consumer.bootstrap-servers}")
+    @Value("${custom.kafka.producer.bootstrap-servers}")
     private String bootstrapServers;
 
     @Value("${custom.kafka.topic}")

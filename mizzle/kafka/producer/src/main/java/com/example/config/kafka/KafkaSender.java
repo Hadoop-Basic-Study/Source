@@ -13,7 +13,10 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import com.example.payload.request.SampleRequest;
 
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 @Component
 public class KafkaSender {
     
@@ -24,8 +27,10 @@ public class KafkaSender {
     private String topic;
 
     public void send(SampleRequest sampleRequest){
+        //topic = sampleRequest.getTopic();
         Message<SampleRequest> message = MessageBuilder.withPayload(sampleRequest)
                                                         .setHeader(KafkaHeaders.TOPIC, topic)
+                                                        .setHeader(KafkaHeaders.MESSAGE_KEY, topic)
                                                         .build();
         
         ListenableFuture<SendResult<String,SampleRequest>> listenableFuture = kafkaTemplate.send(message);
@@ -34,13 +39,12 @@ public class KafkaSender {
 
             @Override
             public void onSuccess(SendResult<String, SampleRequest> stringObjectSendResult) {
-                System.out.println("Sent message=[" + stringObjectSendResult.getProducerRecord().value().toString() +
-                        "] with offset=[" + stringObjectSendResult.getRecordMetadata().offset() + "]");
+                log.info("Sent message=[" + stringObjectSendResult.getProducerRecord().value().toString() +"] with offset=[" + stringObjectSendResult.getRecordMetadata().offset() + "]");
             }
 
             @Override
             public void onFailure(Throwable ex) {
-                System.out.println("Unable to send message=[] due to : " + ex.getMessage());
+                log.warn("Unable to send message=[] due to : " + ex.getMessage());
             }
         });
     }

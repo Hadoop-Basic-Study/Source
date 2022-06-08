@@ -23,6 +23,7 @@ public class KafkaMessageListener {
         @Payload SampleRequest sampleRequest,
         @Headers MessageHeaders messageHeader
     ){
-        log.info("listenWithHeader sampleRequest = {}", sampleRequest.toString());
+        
+        log.info("{}\n{}",messageHeader.toString(), sampleRequest.toString());
     }
 }
