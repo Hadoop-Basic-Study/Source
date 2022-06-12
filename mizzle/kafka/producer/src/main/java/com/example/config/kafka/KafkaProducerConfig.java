@@ -9,6 +9,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+//import org.springframework.kafka.support.serializer.StringOrBytesSerializer;
 
 import com.example.payload.request.SampleRequest;
 
@@ -21,7 +22,6 @@ public class KafkaProducerConfig {
     @Value("${custom.kafka.producer.bootstrap-servers}")
     private String bootstrapServers;
     
-    
     @Bean
     public ProducerFactory<String, SampleRequest> producerFactory() {
         Map<String, Object> configProps = producerFactoryConfig();
@@ -33,6 +33,8 @@ public class KafkaProducerConfig {
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        //string or byte 형식으로 데이터를 전송할때 사용
+        //configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringOrBytesSerializer.class);
         return configProps;
     }
 
