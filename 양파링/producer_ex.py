@@ -11,19 +11,25 @@ import time
 # topic_list.append(example_topic)
 # admin_client.create_topics(new_topics=topic_list,validate_only=False)
 
+def imageserializer(image):
+    ret, buffer = cv2.imencode('.png', image)
+    buffer = buffer.tobytes()
+    return buffer
+
 value_serializers = []
 value_serializers.append(lambda x: dumps(x).encode('utf-8'))
-value_serializers.append(lambda x: cv2.imencode('.png', x))
+value_serializers.append(imageserializer)
 producer = KafkaProducer(acks=0, compression_type='gzip',
                          bootstrap_servers=['localhost:9092','localhost:9093','localhost:9094'],
-                         value_serializer=value_serializers[0])
+                         value_serializer=value_serializers[1])
 
 if __name__=="__main__":
     start = time.time()
-    for i in range(3):
-        image = cv2.imread("D:/Workspace/Kafka/chunsik.png",cv2.IMREAD_ANYCOLOR)
-        ret, buffer = cv2.imencode('.png', image)
-        producer.send('image_topic',value=buffer.tobytes())
+    for i in range(6):
+        image = cv2.imread("D:/Workspace/Kafka/image/chunsik.png",cv2.IMREAD_ANYCOLOR)
+        #message에 key가 None이면 랜덤하게 partition에 할당되어 저장되고
+        #key가 지정되면 같은 키를 가진 message는 같은 partition에 저장된다. 
+        producer.send('image_topic',key=b'chunsik',value=image)
         producer.flush()
     print('elapsed : ', time.time()- start)
         

@@ -13,6 +13,7 @@ def imageserializer(x):
 value_deserializers = []
 value_deserializers.append(lambda x: loads(x.decode('utf-8')))
 value_deserializers.append(imageserializer)
+
 consumer = KafkaConsumer(
     'image_topic',
      bootstrap_servers=['localhost:9092','localhost:9093','localhost:9094'],
@@ -26,8 +27,6 @@ consumer = KafkaConsumer(
 if __name__=="__main__":
     print('[begin] get consumer list')
     for message in consumer:
-        # stream = BytesIO(message.value)
-        # image = Image.open(stream).convert("RGB")
         # print("Topic: %s, Partition: %d, Offset: %d, Key: %s, Value: %s" % (
         #     message.topic, message.partition, message.offset, message.key, message.value
         # ))
