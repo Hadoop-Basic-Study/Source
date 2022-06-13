@@ -9,6 +9,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.kafka.support.serializer.StringOrBytesSerializer;
 
 import com.example.payload.request.SampleRequest;
 
@@ -26,7 +27,7 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, SampleRequest> pushEntityConsumerFactory() {
-        JsonDeserializer<SampleRequest> deserializer = gcmPushEntityJsonDeserializer();
+        JsonDeserializer<SampleRequest> deserializer = entityJsonDeserializer();
         return new DefaultKafkaConsumerFactory<>(consumerFactoryConfig(deserializer),new StringDeserializer(),deserializer);
     }
 
@@ -39,7 +40,7 @@ public class KafkaConsumerConfig {
         return props;
     }
 
-    private JsonDeserializer<SampleRequest> gcmPushEntityJsonDeserializer() {
+    private JsonDeserializer<SampleRequest> entityJsonDeserializer() {
         JsonDeserializer<SampleRequest> deserializer = new JsonDeserializer<>(SampleRequest.class);
         deserializer.setRemoveTypeHeaders(false);
         deserializer.addTrustedPackages("*");

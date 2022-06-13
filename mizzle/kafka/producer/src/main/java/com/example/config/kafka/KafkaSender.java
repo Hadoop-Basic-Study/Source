@@ -30,9 +30,9 @@ public class KafkaSender {
         //topic = sampleRequest.getTopic();
         Message<SampleRequest> message = MessageBuilder.withPayload(sampleRequest)
                                                         .setHeader(KafkaHeaders.TOPIC, topic)
-                                                        //.setHeader(KafkaHeaders.MESSAGE_KEY, topic)
+                                                        //.setHeader(KafkaHeaders.MESSAGE_KEY, topic) //키가 설정되어있는경우는 
                                                         .build();
-        
+
         ListenableFuture<SendResult<String,SampleRequest>> listenableFuture = kafkaTemplate.send(message);
 
         listenableFuture.addCallback(new ListenableFutureCallback<SendResult<String, SampleRequest>>() {
